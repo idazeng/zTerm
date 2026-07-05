@@ -1,0 +1,25 @@
+{
+  "task_id": "20260704-133642-ssh-1-132-begin-1-132-zsshx-1-0-0-android-love-zeng-zssh-2",
+  "goal": "ssh依然无法输入；请检查还有哪些功能没有实现，请实现，我原来的要求：[已粘贴文本 #1 · 132 行]\n\n--- Begin [已粘贴文本 #1 · 132 行] ---\n## 项目基本信息\r\n- 中文名：终端\r\n- 英文名：zsshx\r\n- 版本号：1.0.0\r\n- Android 包名：love.zeng.zsshx\r\n- 图标：Android/Linux 用 icon.png，Windows 用 icon.ico\r\n- 需包含“关于”页面\r\n\r\n## 核心功能\r\n\r\n### SSH 终端\r\n- 支持密码、密钥两种认证方式\r\n- 完整终端模拟：颜色、光标样式、回滚缓冲区\r\n- **选中即复制**：鼠标划选文本后自动写入系统剪贴板，无需 Ctrl+C\r\n- **右键直接粘贴**：终端内右键时立即将剪贴板内容粘贴到当前输入位置\r\n- 终端上方显示主机概要信息条：主机名/ IP、系统类型、在线时长。点击弹出详情窗口，显示 CPU、内存、硬盘使用率、系统负载等信息（可通过 SSH 命令获取）\r\n\r\n### SFTP 文件管理\r\n- 全功能文件操作：浏览、上传文件文件夹、下载文件文件夹、删除文件文件夹、重命名文件文件夹、新建文件/文件夹、权限修改（chmod）、复制文件路径、更随ssh目录\r\n- **拖拽上传/下载**：PC 端从本地拖入文件/文件夹到 SFTP 面板实现上传，从 SFTP 拖出到本地实现下载；移动端以文件选择器/系统分享作为补充\r\n- 右键菜单或按钮操作：将终端工作目录切换到当前 SFTP 目录、跟随终端目录（如终端执行 cd 时自动同步 SFTP 面板定位到对应目录）\r\n- 连接 SSH 后自动打开对应的 SFTP 面板，两者共享同一会话\r\n- 先显示文件夹，再显示文件，默认按字母顺序排序\r\n\r\n### 多标签与命令管理\r\n- 多标签页，每标签独立 SSH+SFTP 会话\r\n- 命令片段库：用户保存常用命令，点击后自动填入当前活动终端输入行\r\n- 命令广播：开关开启后，任何手动输入的命令同步发送至所有打开标签的终端\r\n\r\n### WebDAV 同步\r\n- 同步内容：连接列表、命令片段，备份恢复也仅恢复连接列表和命令片段\r\n- 同步逻辑：启动时、定时（可配置间隔）及手动触发；下载远程数据后，同 ID 记录保留编辑日期最新的一条，不同 ID 合并保留；支持备份与恢复，恢复时覆盖本地所有数据\r\n- 同步后的连接可直接使用，无需额外操作\r\n\r\n### ssh主机导入导出\r\n- 导入：支持导入主机信息，导入主机信息时可导入主机密码（仅支持密码连接的），否则只导入ip等数据\r\n- 导出：支持导出主机信息，但不包括密码，导出格式为json\r\n\r\n## 布局要求\r\n- **PC**：左右分栏，左 SFTP 右 SSH，可拖拽调整分栏比例\r\n- **Android**：上下分栏，上终端下 SFTP，可拖拽调整比例\r\n- 根据屏幕宽度自动切换布局，小屏设备需特别优化可用性\r\n\r\n## 主题与样式\r\n- 支持 Light/Dark 主题，可跟随系统或手动切换，内置多套主题色\r\n- **统一样式管理**：所有字体、颜色、间距、组件样式必须集中定义在一个或少数几个主题/样式文件中，禁止在各页面或组件内独立硬编码样式，以便后期快速修改\r\n\r\n## 安全要求\r\n- 敏感信息（密码、密钥口令）使用 `flutter_secure_storage` 加密存储，加密密钥由用户设定的主密码派生（如 hash）\r\n- 添加主机前，必须先设置主密码：未设置时提示并引导至密码设置页，设置完毕后才可新建连接\r\n- 密钥文件安全存储\r\n\r\n## 技术栈与实现要点\r\n- **框架**：Flutter，目标 Windows + Android\r\n- **状态管理**：Riverpod 或 Provider，需给出完整的状态设计\r\n- **SSH/SFTP**：`dartssh2` 或兼容库，SSH 与 SFTP 共享 Client 实例\r\n- **终端 UI**：`xterm.dart` 或 `flutter_terminal`，需支持选中即复制和右键粘贴的行为定制\r\n- **拖拽**：PC 端使用 `desktop_drop` 或 Flutter 原生 Drag\u0026Drop API；移动端用文件选择器/系统分享补足\r\n- **WebDAV**：`webdav_client`\r\n- **本地数据库**：优先使用 SQLite3（`sqflite` 或 `drift`），用于存储连接信息、命令片段、设置等\r\n- **安全存储**：`flutter_secure_storage`\r\n- **Android 快捷键**：需支持常用快捷键（如 Ctrl+C/V/X 等），可内置一个模拟电脑键盘的虚拟键盘条（功能键区），中文输入可牺牲\r\n\r\n## 状态与数据模型（需交付）\r\n请提供以下内容的设计与关键代码：\r\n- 完整项目目录结构\r\n- `pubspec.yaml` 依赖及建议版本\r\n- 数据模型：ConnectionProfile、SftpTab、Snippet、AppSettings 等\r\n- 全局状态管理方案：标签状态、活动会话、命令同步开关、主题字体等\r\n- 核心 Widget 组件树与路由设计\r\n- SSH 与 SFTP 共享会话的生命周期管理\r\n- 命令片段插入终端与广播到所有标签的实现\r\n- 终端选中复制和右键粘贴的具体实现（拦截鼠标事件或终端回调）\r\n- SFTP 拖拽上传/下载的完整事件处理与进度反馈\r\n- WebDAV 同步、合并、备份恢复的流程\r\n- 主密码设置与验证流程\r\n\r\n## 交付与注释\r\n- 尽可能提供可直接集成运行的代码片段\r\n- 架构须清晰、可扩展\r\n- 代码注释使用中文\r\n\r\n\r\n美化方面，全局美化与 UI 统一，不涉及业务逻辑。请严格遵循以下要求：\r\n\r\n## 1. 统一样式管理（极高优先级）\r\n- 在 `lib/theme/` 目录下创建全局样式文件，集中定义：\r\n  - 颜色（Light/Dark 两套，含多套主题色，如蓝、绿、紫）\r\n  - 字体（界面字体、终端等宽字体，分别可配置）\r\n  - 圆角（小/中/大，统一常量）\r\n  - 间距（统一内边距、外边距，常用尺寸阶梯）\r\n  - 阴影（层级定义，如悬浮、弹窗、卡片）\r\n  - 模糊参数（sigma 值、透明度）\r\n  - 动画时长（快速150ms、正常300ms、缓慢500ms）与曲线\r\n- **严禁在任何业务页面或组件内硬编码样式**。所有按钮、输入框、卡片等必须引用全局主题。\r\n\r\n## 2. 毛玻璃效果（Frosted Glass）\r\n- 封装 `GlassContainer` 组件，统一模糊度和透明度。\r\n- 应用于：侧边栏、顶部工具栏、底部状态栏、右键菜单、弹窗遮罩、悬浮命令面板。\r\n- 深色模式微微提亮，浅色模式微微变暗，并添加细边框。\r\n- Android 端自动降级为纯色半透明（`sigma = 0`），保障性能。\r\n\r\n## 3. 组件样式统一\r\n- **按钮**：统一高度、圆角、内边距。预定义主按钮（filled）、次要按钮（outlined）、文本按钮（text）三种样式，均支持 hover、pressed、disabled 状态。\r\n- **输入框**：统一边框样式（正常/焦点/错误）、背景色、内边距、圆角、清除按钮样式。\r\n- **滚动条**：统一宽度、颜色、圆角，终端和文件列表保持一致。\r\n- **标签页/标签栏**：统一激活态指示器颜色、背景、关闭按钮样式。\r\n- **右键菜单**：统一背景（毛玻璃）、圆角、阴影、菜单项高度和字号。\r\n\r\n## 4. 过渡动画体系\r\n- 所有动画时长和曲线引用全局常量，不得在组件内自行定义。\r\n- **路由切换**：自定义 `PageRouteBuilder`，统一使用滑动（轻微上移）+ 淡入过渡。\r\n- **面板/标签切换**：使用 `AnimatedSwitcher`，保留布局空间，平滑淡入淡出。\r\n- **按钮交互**：点击时通过 `AnimatedScale` 缩放到 0.95，提供触感反馈。\r\n- **终端反馈**：命令插入时终端输入行短暂脉冲闪烁；连接状态用小圆点呼吸灯（`AnimatedContainer` 循环透明度/颜色）。\r\n- **拖拽反馈**：拖拽文件到 SFTP 面板时显示高亮边框；移动端拖拽下载时手指旁显示缩略图，松手弹性收回。\r\n\r\n## 5. 终端区域美化\r\n- 终端本身保持纯色背景，不内部加模糊。模糊用在**镶边**（工具栏和状态栏），营造悬浮感。\r\n- 终端外框添加内阴影（凹陷效果）。\r\n- 光标颜色与主题高亮色一致，闪烁间隔平滑。\r\n- 选中文本复制后，在鼠标附近短暂浮现半透明毛玻璃提示\"已复制 ✓\"。\r\n\r\n## 6. 响应式与平台适配\r\n- PC 端优先毛玻璃和丰富动画；Android 端毛玻璃降级为无模糊半透明，动画时长适当缩短。\r\n- 小屏设备简化阴影层级，减少模糊使用，保证流畅度。\r\n\r\n## 交付要求\r\n- 给出完整的 `lib/theme/` 目录结构及文件名。\r\n- 提供全局样式文件的核心代码（颜色定义、常量、`GlassContainer`、`AppAnim` 类等）。\r\n- 提供按钮、输入框等统一组件的封装代码示例。\r\n- 所有代码注释使用中文。\n--- End [已粘贴文本 #1 · 132 行] ---",
+  "scope": null,
+  "non_goals": null,
+  "allowed_operations": {
+    "write": true,
+    "network": false,
+    "publish": false
+  },
+  "success_criteria": [
+    {
+      "id": "objective_evidence",
+      "description": "The goal outcome is supported by direct evidence, such as inspected code, reproduced behavior, source material, or concrete findings.",
+      "required": true,
+      "evidence_ids": null
+    },
+    {
+      "id": "verification",
+      "description": "The result has relevant verification evidence, such as tests, commands, benchmarks, manual checks, or a documented reason why verification is not applicable.",
+      "required": true,
+      "evidence_ids": null
+    }
+  ]
+}

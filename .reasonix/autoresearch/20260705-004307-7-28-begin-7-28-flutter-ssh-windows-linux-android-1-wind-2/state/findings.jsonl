@@ -1,0 +1,1 @@
+{"id":"f1","kind":"file","summary":"Android输入模块完整实现：6个新文件 + 2个修改文件，Windows编译通过","source":"file","paths":["lib/input/modifier_key_state.dart","lib/input/text_input_interceptor.dart","lib/input/key_codec.dart","lib/input/input.dart","lib/widgets/android_terminal_input_bar.dart","lib/screens/terminal_screen.dart"],"accepted":true,"created_at":"2026-07-05T00:51:23.0677479Z"}

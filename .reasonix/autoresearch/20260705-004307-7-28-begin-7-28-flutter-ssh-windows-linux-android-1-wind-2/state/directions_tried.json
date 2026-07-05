@@ -1,0 +1,9 @@
+[
+  {
+    "fingerprint": "windows-build-passes",
+    "summary": "Windows build passes. 提供最终验证证据。",
+    "first_seen_iteration": 1,
+    "last_seen_iteration": 1,
+    "count": 1
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "task_id": "20260705-004307-7-28-begin-7-28-flutter-ssh-windows-linux-android-1-wind-2",
+  "goal": "[已粘贴文本 #7 · 28 行]\n\n--- Begin [已粘贴文本 #7 · 28 行] ---\n我已开发完成Flutter跨平台SSH终端软件，软件支持Windows桌面、Linux桌面、Android移动端三大平台。\r\n \r\n1. Windows、Linux桌面端：物理键盘Ctrl/Alt/Shift各类组合键运行正常，SSH会话连接、终端缓冲区、VT100/ANSI转义解析、命令收发、界面渲染、历史记录整套内核业务代码无需修改。\r\n2. 现存核心缺陷：Android移动端页面添加了Ctrl/Alt/Shift虚拟修饰按键，按下虚拟修饰键后唤起系统输入法输入内容，输入法只会输出普通文本字符，无法绑定虚拟修饰状态，不能生成 Ctrl+C 、 Ctrl+D 、Alt组合指令这类终端控制组合按键。\r\n3. 本次优化选定改造方案：方案二 只读CustomPaint终端画布 + 拦截系统TextInput底层通道，仅重构安卓移动端输入模块，其余全平台原有逻辑全部沿用。\r\n \r\n改造硬性约束\r\n \r\n1. 禁止改动内核：SSH连接管理、收发通道、终端输出解析、滚动缓冲区、持久化配置代码完全保留，只重构输入事件接收链路。\r\n2. 删除原生输入控件：移除所有 TextField 输入载体，终端显示区域替换为 CustomPaint 自定义画布，终端展示区域完全只读，无系统可编辑组件。\r\n3. 分层拦截系统输入通道：拦截Flutter SystemChannels.textInput 底层二进制消息，屏蔽输入法自动绑定输入客户端、同步编辑文本的行为；代码增加平台判断，仅Android系统执行拦截，Windows、Linux桌面端直接放行原生通道，不影响原有键盘输入。拦截逻辑仅阻断文本注入，保留唤起系统软键盘的能力。\r\n4. 虚拟修饰键状态管控：维护内存布尔状态  ctrlDown 、 altDown 、 shiftDown ，页面虚拟按钮只修改内存状态，支持单击锁定、再次点击解锁；页面失去焦点、APP切后台、页面销毁、输入法收起时，强制重置全部修饰键，解决状态粘连问题；预留Fn、翻页键扩展字段。\r\n5. 全局按键事件捕获：用 RawKeyboardListener 绑定独立FocusNode焦点节点，捕获安卓软键盘全部事件：普通字符、退格、Tab、上下左右方向键、删除按键。\r\n6. 组合键编码转换：根据按键内容+实时修饰键状态，翻译成ASCII控制字符、VT100标准转义序列，转换结果组装成 Uint8List ，调用项目原本的SSH数据下发接口发送数据流。\r\n7. 输入法环境适配：关闭安卓输入法预编辑拼音候选、字符预组合功能，兼容小米、华为、OPPO、vivo厂商原生键盘以及百度、搜狗第三方输入法。\r\n8. 桌面端零侵入：桌面物理键盘监听、快捷键原有逻辑原样保留，新增代码做好平台隔离，两套输入逻辑互不冲突。\r\n \r\n需要输出交付内容\r\n \r\n1. 平台区分版 TextInput通道拦截封装类，附带初始化调用位置说明；\r\n2. 终端独立焦点管理代码：焦点主动获取、焦点丢失监听、失焦重置修饰键逻辑，配套 RawKeyboardListener 页面包裹代码；\r\n3. 修饰键状态管理工具类：状态切换、全局读取、一键重置全部状态，预留后续功能按键扩展属性；\r\n4. 按键转换核心工具函数：入参（ctrl状态、alt状态、shift状态、按键标识），返回SSH可直接发送的Uint8List字节流；覆盖全部高频组合快捷键、方向键、功能键标准终端转义码；\r\n5. 改造后页面整体结构示例：顶部操作栏、中间CustomPaint终端画布、底部虚拟修饰按键区域完整嵌套代码；\r\n6. 安卓适配补丁代码：关闭输入法预编辑、输入法弹出视图位移修复、焦点被系统抢夺兜底、连续重复按键优化；\r\n7. 完整接入改造文档：原有代码修改点位、无需改动文件清单、新旧输入逻辑对比、功能测试用例；\r\n8. 代码编写要求：仅使用Flutter官方内置库，不引入第三方依赖；代码注释详细，命名贴合Flutter项目开发规范，预留后续新增F1-F12、PgUp/PgDn虚拟按键扩展接口。\r\n \n--- End [已粘贴文本 #7 · 28 行] ---",
+  "scope": null,
+  "non_goals": null,
+  "allowed_operations": {
+    "write": true,
+    "network": false,
+    "publish": false
+  },
+  "success_criteria": [
+    {
+      "id": "objective_evidence",
+      "description": "The goal outcome is supported by direct evidence, such as inspected code, reproduced behavior, source material, or concrete findings.",
+      "required": true,
+      "evidence_ids": [
+        "f1"
+      ]
+    },
+    {
+      "id": "verification",
+      "description": "The result has relevant verification evidence, such as tests, commands, benchmarks, manual checks, or a documented reason why verification is not applicable.",
+      "required": true,
+      "evidence_ids": null
+    }
+  ]
+}
